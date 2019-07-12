@@ -11,3 +11,5 @@ Para a utilização deve-se executar o comando <code>composer install</code> ap�
 O comando <code>php quickstart.php</code> deve ser executado, ele gera uma URL que deve ser acessada por um web browser para gerar um código de verificação, o qual é pedido ao fim dessa execução.
 
 Por fim pode-se fazer acesso dos e-mails através da página index.php pelo servidor(XAMPP ou Servidor web).
+
+<b>Nota:</b> Pode ser que o PHP retorne um <i>WARNING</i> de permissão negada na hora de sobrescrever o arquivo <i>token.json</i>, deve-se então alterar as permissões deste arquivo: <code>chmod 777 token.json</code>
