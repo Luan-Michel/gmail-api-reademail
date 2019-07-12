@@ -1,9 +1,9 @@
 <?php
 require __DIR__ . '/vendor/autoload.php';
 
-if (php_sapi_name() != 'cli') {
-    throw new Exception('This application must be run on the command line.');
-}
+// if (php_sapi_name() != 'cli') {
+//     throw new Exception('This application must be run on the command line.');
+// }
 
 /**
  * Returns an authorized API client.
@@ -36,8 +36,8 @@ function getClient()
         } else {
             // Request authorization from the user.
             $authUrl = $client->createAuthUrl();
-            printf("Open the following link in your browser:\n%s\n", $authUrl);
-            print 'Enter verification code: ';
+            echo "Open the following link in your browser:\n".$authUrl."\n";
+            echo 'Enter verification code: ';
             $authCode = trim(fgets(STDIN));
 
             // Exchange authorization code for an access token.
@@ -68,10 +68,44 @@ $user = 'me';
 $results = $service->users_labels->listUsersLabels($user);
 
 if (count($results->getLabels()) == 0) {
-  print "No labels found.\n";
+  echo "No labels found.\n";
 } else {
-  print "Labels:\n";
+  echo "Labels:<br>";
   foreach ($results->getLabels() as $label) {
-    printf("- %s\n", $label->getName());
+    echo $label->getName()."<br>";
   }
 }
+
+$results = $service->users_messages->listUsersMessages($user);
+
+echo "<pre>";
+//var_dump($results);
+
+if (count($results->getMessages()) == 0) {
+  echo "No messages found.\n";
+} else {
+  echo "Messages:<br>";
+  foreach ($results->getMessages() as $message) {
+    echo "Email: "./*$service->users_messages->get($user, $message->id)->getSnippet().*/"<br><br>";
+    $bodys = $service->users_messages->get($user, $message->id)->payload["parts"];
+    foreach($bodys as $b){
+      echo base64_decode($b->body->data)  ."<br>";
+      //var_dump(base64_decode($service->users_messages->get($user, $message->id)->payload["body"]->data));
+    }
+  }
+}
+
+// $results = $service->users_threads->listUsersThreads($user);
+//
+// echo "<pre>";
+// var_dump($results);
+//
+// if (count($results->getThreads()) == 0) {
+//   echo "No messages found.\n";
+// } else {
+//   echo "Messages:<br>";
+//   foreach ($results->getThreads() as $message) {
+//     echo $service->users_threads->get($user, $message->id)->getMessages()."<br>";
+//     //var_dump($service->users_messages->get($user, $message->id));
+//   }
+// }
